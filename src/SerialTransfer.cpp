@@ -1,9 +1,7 @@
 #include "SerialTransfer.h"
 
 
-/*! \brief Initialize SerialTransport object
-
-  Advanced initializer for the SerialTransfer Class
+/*! \brief Advanced initializer for SerialTransfer objects
 
   \param [in] _port Serial port to communicate over
   \param [in] configs Struct that holds config values for all possible initialization parameters
@@ -14,20 +12,14 @@ void SerialTransfer::begin(Stream& _port, const configST configs)
 	packet.begin(configs);
 }
 
+/*! \brief Initialize SerialTransport object
 
-/*
- void SerialTransfer::begin(Stream &_port, const bool _debug, Stream &_debugPort)
- Description:
- ------------
-  * Simple initializer for the SerialTransfer Class
- Inputs:
- -------
-  * const Stream &_port - Serial port to communicate over
-  * const bool _debug - Whether or not to print error messages
-  * const Stream &_debugPort - Serial port to print error messages
- Return:
- -------
-  * void
+  Simple initializer for the SerialTransfer Class. Additional configuration options are available
+  from the advanced initialization begin() method.
+  \param [in] _port Serial port to communicate over
+  \param [in] _debug Whether or not to print error messages. Default: true
+  \param [in] _debugPort Serial port to print error messages. Default: Serial
+  \param [in] timeout Number of ms to wait before declaring packet parsing timeout. Default: 50ms
 */
 void SerialTransfer::begin(Stream& _port, const bool _debug, Stream& _debugPort, uint32_t _timeout)
 {
@@ -36,20 +28,14 @@ void SerialTransfer::begin(Stream& _port, const bool _debug, Stream& _debugPort,
 	packet.begin(_debug, _debugPort, _timeout);
 }
 
+/*! \brief Send the packet which was previously populated by txObj() calls to the serial port
 
-/*
- uint8_t SerialTransfer::sendData(const uint16_t &messageLen, const uint8_t packetID)
- Description:
- ------------
-  * Send a specified number of bytes in packetized form
- Inputs:
- -------
-  * const uint16_t &messageLen - Number of values in txBuff
-  to send as the payload in the next packet
-  * const uint8_t packetID - The packet 8-bit identifier
- Return:
- -------
-  * uint8_t numBytesIncl - Number of payload bytes included in packet
+  COBS-Encode and write a specified number of bytes in packetized form to the serial link
+  after populating the packetID, CRC, and other header fields.
+
+  \param messageLen Number of values in txBuff to send as the payload in the next packet
+  \param packetID The packet 8-bit identifier
+  \return numBytesIncl Number of payload bytes included in packet
 */
 uint8_t SerialTransfer::sendData(const uint16_t& messageLen, const uint8_t packetID)
 {
@@ -64,18 +50,12 @@ uint8_t SerialTransfer::sendData(const uint16_t& messageLen, const uint8_t packe
 }
 
 
-/*
- uint8_t SerialTransfer::available()
- Description:
- ------------
-  * Parses incoming serial data, analyzes packet contents,
-  and reports errors/successful packet reception
- Inputs:
- -------
-  * void
- Return:
- -------
-  * uint8_t bytesRead - Num bytes in RX buffer
+/*! \brief Handle incoming data and report if a complete packet is available
+
+  Parses and decodes incoming serial data, analyzes packet contents,
+  and reports errors/successful packet reception. If callbacks have been
+  configured they are called from within this function.
+  \return bytesRead - Number of bytes in RX buffer
 */
 uint8_t SerialTransfer::available()
 {
@@ -115,19 +95,13 @@ uint8_t SerialTransfer::available()
 }
 
 
-/*
- bool SerialTransfer::tick()
- Description:
- ------------
-  * Checks to see if any packets have been fully parsed. This
+/*! \brief Report whether a complete packet is available
+
+  Checks to see if any packets have been fully parsed. This
   is basically a wrapper around the method "available()" and
   is used primarily in conjunction with callbacks
- Inputs:
- -------
-  * void
- Return:
- -------
-  * bool - Whether or not a full packet has been parsed
+
+  \return True if a full packet has been parsed and is available, false otherwise
 */
 bool SerialTransfer::tick()
 {
@@ -138,36 +112,19 @@ bool SerialTransfer::tick()
 }
 
 
-/*
- uint8_t SerialTransfer::currentPacketID()
- Description:
- ------------
-  * Returns the ID of the last parsed packet
- Inputs:
- -------
-  * void
- Return:
- -------
-  * uint8_t - ID of the last parsed packet
+/*! \brief Get the packet ID of the last parsed packet
+
+  \return ID of the last parsed packet
 */
 uint8_t SerialTransfer::currentPacketID()
 {
 	return packet.currentPacketID();
 }
 
+/*! \brief Clear buffers and reset the object
 
-/*
- void SerialTransfer::reset()
- Description:
- ------------
-  * Clears out the tx, and rx buffers, plus resets
+  Clears out the tx, and rx buffers, plus resets
   the "bytes read" variable, finite state machine, etc
- Inputs:
- -------
-  * void
- Return:
- -------
-  * void
 */
 void SerialTransfer::reset()
 {
