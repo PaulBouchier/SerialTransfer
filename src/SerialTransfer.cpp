@@ -1,19 +1,12 @@
 #include "SerialTransfer.h"
 
 
-/*
- void SerialTransfer::begin(Stream &_port, configST configs)
- Description:
- ------------
-  * Advanced initializer for the SerialTransfer Class
- Inputs:
- -------
-  * const Stream &_port - Serial port to communicate over
-  * const configST configs - Struct that holds config
-  values for all possible initialization parameters
- Return:
- -------
-  * void
+/*! \brief Initialize SerialTransport object
+
+  Advanced initializer for the SerialTransfer Class
+
+  \param [in] _port Serial port to communicate over
+  \param [in] configs Struct that holds config values for all possible initialization parameters
 */
 void SerialTransfer::begin(Stream& _port, const configST configs)
 {
